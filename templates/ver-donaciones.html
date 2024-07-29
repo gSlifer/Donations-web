@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Donaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}"> 
+</head>
+<body>
+    <table id="my-table">
+        <thead>
+            <tr>
+                <th>Comuna</th>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Nombre</th>
+                <th>Foto</th>
+                <th>Información</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for donacion in donaciones %}
+                <tr>
+                    <td>{{ donacion.comuna_id }}</td>
+                    <td>{{ donacion.tipo }}</td>
+                    <td>{{ donacion.cantidad }}</td>
+                    <td>{{ donacion.fecha_disponibilidad }}</td>
+                    <td>{{ donacion.nombre }}</td>
+                    <td>
+                        {% if donacion.fotos %}
+                            {% for foto in donacion.fotos %}
+                                <img src="{{ url_for('static', filename='photos/' ~ foto) }}" alt="{{ donacion.nombre }}" width="120" height="120">
+                            {% endfor %}
+                        {% else %}
+                            Sin fotos
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('informacion_donacion', id=donacion.id) }}">Ver información</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('ver_donaciones', page=page-1) }}">Anterior</a>
+        {% endif %}
+        
+        <span>Página {{ page }}</span>
+        
+        {% if pedidos|length >= 5 %}
+            <a href="{{ url_for('ver_donaciones', page=page+1) }}">Siguiente</a>
+        {% endif %}
+    </div>
+
+    <script> var indexUrl = "{{ url_for('index') }}"; </script>
+    <button id="back-to-inicio-btn" type="button" onclick="window.location.href = indexUrl;">Volver al inicio</button>
+</body>
+</html>

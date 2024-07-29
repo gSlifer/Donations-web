@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Pedidos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}"> 
+</head>
+<body>
+    <table id="my-table">
+        <thead>
+            <tr>
+                <th>Comuna</th>
+                <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Cantidad</th>
+                <th>Nombre</th>
+                <th>Información</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+                <tr>
+                    <td>{{ pedido[1] }}</td>
+                    <td>{{ pedido[2] }}</td>
+                    <td>{{ pedido[3] }}</td>
+                    <td>{{ pedido[4] }}</td>
+                    <td>{{ pedido[5] }}</td>
+                    <td>
+                        <a href="{{ url_for('informacion_pedido', id=pedido[0]) }}">Ver información</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('ver_pedidos', page=page-1) }}">Anterior</a>
+        {% endif %}
+        
+        <span>Página {{ page }}</span>
+        
+        {% if pedidos|length >= 5 %}
+            <a href="{{ url_for('ver_pedidos', page=page+1) }}">Siguiente</a>
+        {% endif %}
+    </div>
+
+    <script> var indexUrl = "{{ url_for('index') }}"; </script>
+    <button id="back-to-inicio-btn" type="button" onclick="window.location.href = indexUrl;">Volver al inicio</button>
+</body>
+</html>

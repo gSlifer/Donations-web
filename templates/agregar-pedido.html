@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Agregar Pedido Form</title>
+	<script src="{{ url_for('static', filename='js/region_comunas.js') }}"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			loadOptions();
+		});
+	</script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}"> 
+</head>
+<body>
+	<div class="main-container">
+        <div id="val-box" hidden>
+            <h2 id="val-msg"></h2>
+            <ul id="val-list"></ul>
+        </div>
+	<form name="agregar-pedido" method="post" enctype="multipart/form-data">
+		<label for="region">Región:</label>
+        <select id="region" name="region"></select>
+		<br><br>
+		
+		<label for="comuna">Comuna:</label>
+        <select id="comuna" name="comuna"></select>
+		<br><br>
+		
+		<label for="tipo">Tipo:</label>
+		<select name="tipo" id="tipo" required>
+			<option value="" selected disabled>Seleccione un tipo</option>
+			<option value="Fruta">Fruta</option>
+			<option value="Verdura">Verdura</option>
+			<option value="Otro">Otro</option>
+		</select>
+		<br><br>
+		
+        <label for="descripcion">Descripcion:</label>
+		<input type="text" name="descripcion" id="descripcion" maxlength="80">
+		<br><br>
+
+		<label for="cantidad">Cantidad:</label>
+		<input type="text" name="cantidad" id="cantidad" required maxlength="10">
+		<br><br>
+
+        <label for="nombre">Nombre solicitante:</label>
+		<input type="text" name="nombre" id="nombre" required minlength="3" maxlength="80">
+		<br><br>
+		
+        <label for="email">Email contacto:</label>
+		<input type="email" name="email" id="email" required placeholder="ejemplo@dominio.ejemplo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+		<br><br>
+		
+		<label for="telefono">Teléfono: +569 </label>
+        <input type="text" id="telefono" name="telefono" placeholder="12345678" pattern="[0-9]{8}">
+		<br><br>
+
+		<button id="submit-btn1" type="button" onclick="document.getElementById('id01').style.display='block'">Agregar pedido</button>
+		<div id="id01" class="modal">
+			<div class="container">
+				<h1 id="confirm1" hidden class="confirmtxt">Agregar Pedido</h1>
+				<p id="confirm2" hidden class="confirmtxt">¿Confirma que desea agregar este pedido?</p>
+			
+			<div class="clearfix">
+				<button type="button" id="confirm3" hidden onclick="document.getElementById('id01').style.display='none'" class="nobtn">No, quiero volver al formulario</button>
+				<button type="button" id="submit-btn2" hidden onclick="document.getElementById('id01').style.display='none'" class="sibtn">Sí, confirmo</button>
+			</div>
+			</div>	
+		</div>
+		<script> var indexUrl = "{{ url_for('index') }}"; </script>
+		<div class="form-message">
+			{% if ty_msg %}
+				<p id="ty_msg">Hemos recibido la información de su pedido. Muchas gracias.</p>
+			{% endif %}
+			{% if back_btn %}
+				<a href="{{ url_for('index') }}" id="back-to-inicio-btn">Ir al inicio</a>
+			{% endif %}
+		</div>
+	</form>
+	</div>
+	<script>
+		var modal = document.getElementById('id01');
+		window.onclick = function(event) {
+		  if (event.target == modal) {
+			modal.style.display = "none";
+		  }
+		}
+		</script>
+	<script src="{{ url_for('static', filename='js/validation2.js') }}"></script>
+</body>
+</html>

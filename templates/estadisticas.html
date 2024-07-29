@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flot@0.8.3/jquery.flot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flot@0.8.3/jquery.flot.pie.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style4.css')}}"> 
+</head>
+<body>
+    <h1>Estadísticas</h1>
+    
+    <div class="chart-container">
+        <h2>Gráfico de Donaciones</h2>
+        <div id="donaciones-chart" class="chart"></div>
+
+        <h2>Gráfico de Pedidos</h2>
+        <div id="pedidos-chart" class="chart"></div>
+    </div>
+
+    <script> var indexUrl = "{{ url_for('index') }}"; </script>
+    <button id="back-to-inicio-btn" type="button" onclick="window.location.href = indexUrl;">Volver al inicio</button>
+    <script>
+        $(document).ready(function() {
+            var donations = JSON.parse('{{ donations | safe }}');
+            var pedidos = JSON.parse('{{ pedidos | safe }}');
+            var donationsData = [];
+            for (var i = 0; i < donations.length; i++) {
+                donationsData.push({
+                    label: donations[i].tipo,
+                    data: donations[i].cantidad
+                });
+            }
+            var pedidosData = [];
+            for (var i = 0; i < pedidos.length; i++) {
+                pedidosData.push({
+                    label: pedidos[i].tipo,
+                    data: pedidos[i].cantidad
+                });
+            }
+            $.plot("#donaciones-chart", donationsData, {
+                series: {pie: {show: true}},
+                legend: {show: true},
+                colors: ["#F47C7C", "#A1DE93", "#F7F48B"]
+            });
+            $.plot("#pedidos-chart", pedidosData, {
+                series: {pie: {show: true,}},
+                legend: {show: true},
+                colors: ["#F47C7C", "#A1DE93", "#F7F48B"]
+            });
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style3.css')}}"> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster-src.js"></script>
+</head>
+  <body>
+    <h1>Bienvenido</h1>
+    <ul>
+      <li><a href="{{ url_for('agregar_donacion')}}">Agregar Donación</a></li>
+      <li><a href="{{ url_for('agregar_pedido')}}">Agregar Pedido</a></li>
+      <li><a href="{{ url_for('ver_donaciones')}}">Ver Donaciones</a></li>
+      <li><a href="{{ url_for('ver_pedidos')}}">Ver Pedidos</a></li>
+      
+      <li><a href="{{ url_for('estadisticas')}}">Estadisticas</a></li>
+    </ul>
+    <h2>Encuentra Donaciones y Pedidos cerca de ti</h2>
+    <div id="map" style="height: 40%; width: 90%"></div>
+  </body>
+  <script>
+    var donations = JSON.parse('{{ donations | safe }}');
+    var pedidos = JSON.parse('{{ pedidos | safe }}');
+  </script>
+  <script>
+    var donations = JSON.parse('{{ donations | safe }}');
+    var pedidos = JSON.parse('{{ pedidos | safe }}');
+  
+    var map = L.map('map').setView([-33.45, -70.6666667], 10); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(map);
+  
+    fetch("{{ url_for('static', filename='json/comunas-Chile.json') }}")
+    .then(response => response.json())
+    .then(data => {
+      var comunasMap = {};
+      data.forEach(comuna => {
+        comunasMap[comuna.name] = [comuna.lat, comuna.lng];
+      });
+  
+      var markers = L.markerClusterGroup(); 
+  
+      var estiloDonacion = {
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [0, -41]
+      };
+  
+      var estiloPedido = {
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [0, -41]
+      };
+  
+      donations.forEach(donation => {
+        var comuna = donation.comuna;
+        var coordinates = comunasMap[comuna];
+        if (coordinates) {
+          var marker = L.marker(coordinates, { icon: L.icon(estiloDonacion) });
+          marker.bindPopup(`
+            <h3>Donación</h3>
+            <p>ID: ${donation.id}</p>
+            <p>Calle y número: ${donation.calle_numero}</p>
+            <p>Tipo: ${donation.tipo}</p>
+            <p>Cantidad: ${donation.cantidad}</p>
+            <p>Fecha disponibilidad: ${donation.fecha}</p>
+            <p>Email: ${donation.email}</p>
+          `);
+          markers.addLayer(marker);
+        }
+      });
+  
+      pedidos.forEach(pedido => {
+        var comuna = pedido.comuna;
+        var coordinates = comunasMap[comuna];
+        if (coordinates) {
+          var marker = L.marker(coordinates, { icon: L.icon(estiloPedido) });
+          marker.bindPopup(`
+            <h3>Pedido</h3>
+            <p>ID: ${pedido.id}</p>
+            <p>Tipo: ${pedido.tipo}</p>
+            <p>Cantidad: ${pedido.cantidad}</p>
+            <p>Email: ${pedido.email}</p>
+          `);
+          markers.addLayer(marker);
+        }
+      });
+  
+      map.addLayer(markers);
+    });
+  </script>
+</html>

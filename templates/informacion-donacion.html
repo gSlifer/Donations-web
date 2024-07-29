@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informacion Donaciones</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}"> 
+  <script>
+    function mostrarFoto(foto) {
+      var modal = document.getElementById('modalFoto');
+      var img = document.getElementById('imagenModal');
+      img.src = "{{ url_for('static', filename='photos/') }}" + foto;
+      modal.style.display = 'block';
+    }
+    function cerrarModal() {
+      var modal = document.getElementById('modalFoto');
+      modal.style.display = 'none';
+    }
+  </script>
+</head>
+<body>
+  <div id="modalFoto" class="modal">
+    <span class="cerrar" onclick="cerrarModal()">&times;</span>
+    <img id="imagenModal" class="imagen-modal" alt="imagenModal">
+  </div>
+  <table>
+    <tr>
+      <th>Region</th>
+      <td id="region">{{ donation.nombre_region }}</td>
+    </tr>
+    <tr>
+      <th>Comuna</th>
+      <td id="comuna">{{ donation.nombre_comuna }}</td>
+    </tr>
+    <tr>
+      <th>Calle</th>
+      <td id="calle">{{ donation.calle_numero }}</td>
+    </tr>
+    <tr>
+      <th>Tipo</th>
+      <td id="tipo">{{ donation.tipo }}</td>
+    </tr>
+    <tr>
+      <th>Cantidad</th>
+      <td id="cantidad">{{ donation.cantidad }}</td>
+    </tr>
+    <tr>
+      <th>Fecha</th>
+      <td id="fecha">{{ donation.fecha_disponibilidad }}</td>
+    </tr>
+    <tr>
+      <th>Descripcion</th>
+      <td id="descripcion">{{ donation.descripcion }}</td>
+    </tr>
+    <tr>
+      <th>Condiciones</th>
+      <td id="condiciones">{{ donation.condiciones_retirar }}</td>
+    </tr>
+    <tr>
+      <th>Foto</th>
+      <td id="foto-container">
+        {% if donation.fotos %}
+          {% for foto in donation.fotos %}
+            <img src="{{ url_for('static', filename='photos/' ~ foto) }}" alt="{{ donation.nombre }}" width="640" height="480" style="cursor: pointer;" onclick="mostrarFoto('{{ foto }}')">
+          {% endfor %}
+        {% else %}
+          Sin fotos
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Nombre</th>
+      <td id="nombre">{{ donation.nombre }}</td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td id="email">{{ donation.email }}</td>
+    </tr>
+    <tr>
+      <th>Celular</th>
+      <td id="celular">{{ donation.celular }}</td>
+    </tr>
+  </table>
+  <script> var indexUrl = "{{ url_for('index') }}"; </script>
+  <button id="back-to-inicio-btn" type="button" onclick="window.location.href = indexUrl;">Volver al inicio</button>
+</body>
+</html>

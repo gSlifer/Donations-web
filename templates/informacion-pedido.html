@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informacion Peididos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css')}}"> 
+</head>
+<body>
+  <table>
+    <tr>
+      <th>Region</th>
+      <td id="region">{{ pedido[3] }}</td>
+    </tr>
+    <tr>
+      <th>Comuna</th>
+      <td id="comuna">{{ pedido[2] }}</td>
+    </tr>
+    <tr>
+      <th>Tipo</th>
+      <td id="tipo">{{ pedido[4] }}</td>
+    </tr>
+    <tr>
+      <th>Descripcion</th>
+        <td id="descripcion">{{ pedido[5] }}</td>
+      </tr>
+    <tr>
+      <th>Cantidad</th>
+      <td id="cantidad">{{ pedido[6] }}</td>
+    </tr>
+    <tr>
+      <th>Nombre</th>
+      <td id="nombre">{{ pedido[7] }}</td>
+    </tr>
+    <tr>
+      <th>Email</th>
+      <td id="email">{{ pedido[8] }}</td>
+    </tr>
+    <tr>
+      <th>Celular</th>
+      <td id="celular">{{ pedido[9] }}</td>
+    </tr>
+  </table>
+  <script> var indexUrl = "{{ url_for('index') }}"; </script>
+  <button id="back-to-inicio-btn" type="button" onclick="window.location.href = indexUrl;">Volver al inicio</button>
+</body>
+</html>
